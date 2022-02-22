@@ -5,6 +5,13 @@ import { Vec3 } from "vec3";
 import { Entity } from "prismarine-entity";
 import { Block } from "prismarine-block";
 
+
+
+export function fetchUser(bot: Bot, name: string, authorName: string) {
+    return bot.nearestEntity((e) => e.username === name ?? e.name === name) ?? bot.nearestEntity((e) => e.username === authorName);
+}
+
+
 export function lookingAtEuler(yaw: number, pitch: number) {
     return new THREE.Euler(yaw, pitch, 0);
 }

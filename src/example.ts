@@ -1,26 +1,31 @@
-import { createBot } from "mineflayer"
-import sumoPlugin from "./index"
-
-
+import { Entity } from "prismarine-entity";
+import { createBot, Bot } from "mineflayer";
+import sumoPlugin from "./index";
+import { fetchUser } from "./util";
 
 const bot = createBot({
-    username: "fuck",
+    username: "us",
     host: "localhost",
-    version: "1.8.9"
-})
+    version: "1.8.9",
+});
 
 
-const prefix = "!"
+
+const prefix = "!";
 bot.on("chat", (username, message) => {
-    const msg = message.split(' ')
     if (username === bot.entity.username) return;
 
+    let target; // Entity
+    let pos; //Vec3
 
-    switch(msg[0]) {
+    const msg = message.split(" ");
+
+    switch (msg[0]) {
         case prefix + "testlook":
-            bot.customLook.lookAt()
+            target = fetchUser(bot, msg[0], username);
+            if (!target) return; // cancel command if cannot find target.
+
+
+            bot.customLook.lookAt();
     }
-
-
-
-})
+});
