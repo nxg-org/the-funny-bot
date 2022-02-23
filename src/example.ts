@@ -7,8 +7,8 @@ import tracker from "@nxg-org/mineflayer-tracker";
 
 //setup.
 const bot = createBot({
-    username: "fuck",
-    host: "SMEDcccccccc.aternos.me",
+    username: process.argv[2] ?? "fuck",
+    host: "localhost",
     version: "1.8.9",
 });
 bot.loadPlugin(sumoPlugin);
