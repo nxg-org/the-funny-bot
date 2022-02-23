@@ -1,13 +1,13 @@
 import { Bot } from "mineflayer";
 import { Vec3 } from "vec3";
-import { lookingAtEuler, targetEuler } from "../util";
+import { dirToEuler, lookingAtEuler, targetEuler } from "../util";
 import TWEEN, { Tween } from "@tweenjs/tween.js";
 import * as THREE from "three";
 
 type EasingFunction = (amount: number) => number;
 
 export class CustomLook {
-    public _currentlyLooking: boolean;
+    public readonly _currentlyLooking: boolean;
     public _task: Tween<THREE.Euler> | null;
     public easing: EasingFunction;
 
@@ -89,10 +89,29 @@ export class CustomLook {
         }
     }
 
+    public async lookTowards(dir: Vec3, duration: number = 1000, force: boolean = false) {
+        const startRotation = lookingAtEuler(this.bot.entity.yaw, this.bot.entity.pitch);
+        const endRotation = dirToEuler(dir);
+        
+        this._wrapRotationEuler(startRotation, endRotation);
+
+        if (this._task?.isPlaying() && !force) {
+            this._debug("task running + not forcing.", TWEEN.getAll().length, "tasks.");
+            this._eventuallyChain(endRotation, duration);
+        } else if (this._task?.isPlaying() && force) {
+            this._debug("task running + forcing.", TWEEN.getAll().length, "tasks.");
+            this._launchNextTaskFromCancel(endRotation, duration);
+        } else if (!this._task?.isPlaying()) {
+            this._debug("task not running, making new.", TWEEN.getAll().length, "tasks.");
+            this._task = this._buildTask(startRotation, endRotation, duration);
+            this._task.start();
+        }
+    }
+
     public async lookAt(target: Vec3, duration: number = 1000, force: boolean = false) {
         const startRotation = lookingAtEuler(this.bot.entity.yaw, this.bot.entity.pitch);
         const endRotation = targetEuler(this.bot.entity.position.offset(0, this.bot.entity.height, 0), target);
-
+        
         this._wrapRotationEuler(startRotation, endRotation);
 
         if (this._task?.isPlaying() && !force) {
