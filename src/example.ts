@@ -1,14 +1,16 @@
 import { Entity } from "prismarine-entity";
 import { createBot, Bot } from "mineflayer";
 import sumoPlugin from "./index";
-import { cheapPredictVelocity, entityCheck, fetchUser, getLatencyInTicks } from "./util";
+import { cheapPredictVelocity, entityCheck, fetchUser, getLatencyInTicks } from "./lib/util/lookUtil";
 import utilPlugin, { AABBUtils, MathUtils } from "@nxg-org/mineflayer-util-plugin";
-import tracker from "@nxg-org/mineflayer-tracker";
+import tracker, {Physics} from "@nxg-org/mineflayer-tracker";
+import prismarineRegistry from "prismarine-registry";
 
 //setup.
 const bot = createBot({
     username: process.argv[2] ?? "fuck",
-    host: "localhost",
+    host: "SMEDcccccccc.aternos.me",
+    port: 63403,
     version: "1.8.9",
 });
 bot.loadPlugin(sumoPlugin);
@@ -17,6 +19,7 @@ bot.loadPlugin(tracker);
 
 //variables.
 const prefix = "!";
+const sim = new Physics(prismarineRegistry(bot.version))
 let testLookFollowLoop = false;
 let fightingLoop = false;
 
@@ -65,7 +68,7 @@ bot.on("chat", async (username, message) => {
                 const scaledVel = bot.entity.velocity.scaled(scale);
                 if (entityCheck(bot, 3, { enabled: true, scale })) {
                     console.log("attacking");
-                    if (i % 3 === 0) {
+                    if (i % 3 < 2) {
                         bot.attack(target);
                         bot.setControlState("sprint", false);
                         i = 0;

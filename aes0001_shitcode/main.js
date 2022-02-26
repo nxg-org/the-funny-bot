@@ -14,7 +14,7 @@ bot.legitLook = async (position, force = true) => {
     const rollToCenter = vecToRoll(position.offset(0, bot.entity.onGround ? 1.6 : 1.4, 0), bot);
     const dPitch = rollToCenter.pitch - bot.entity.pitch;
     const changeNeeded = deltaYaw(bot.entity.yaw, bot.entity.yaw + rollToCenter.yaw);
-    const pitchChange =
+    const pitchChange    =
         position.y - bot.entity.position.y >= 1.3
             ? dPitch / ((pitchBD + Math.random() * pitchRD) * 5) + Math.random() * randomnessPitch
             : dPitch / (pitchBD + Math.random() * pitchRD) + Math.random() * randomnessPitch;

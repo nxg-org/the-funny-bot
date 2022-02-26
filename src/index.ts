@@ -1,6 +1,6 @@
 import TWEEN from "@tweenjs/tween.js"
 import {Bot} from "mineflayer"
-import { CustomLook } from "./classes"
+import { CustomLook } from "./lib"
 
 declare module "mineflayer" {
     interface Bot {
